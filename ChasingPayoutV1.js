@@ -8,8 +8,6 @@ var startingBalance = engine.getBalance(); // in satoshi
 console.log('================== m0viCz in  CoinsCrash ==================');
 console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (startingBalance/100).toFixed(2) + ' bits');
-//console.log('Risk Tolerance: ' + (risk * 100).toFixed(2) + '%');
-console.log('Inital base bet: ' + Math.round(baseBet/100) + ' bits (real value ' + (baseBet/100).toFixed(2) + ')');
 
 var playing = false;
  
@@ -22,14 +20,12 @@ engine.on('game_starting', function(info) {
 });
 
 engine.on('game_crash', function(data) {
- 
   if(!playing) {
-		return;	
-	}
- 
+    return;
+  } 
 	playing = false;
  
-	if(engine.lastGamePlay() == 'LOST') {
+  if(engine.lastGamePlay() == 'LOST') {
     basePayout += 1.25;
     console.log('[Loss -'+baseBet+' Bits] , Now Payout change to ' + basePayout + 'x');
     profit = profit - baseBet;    
