@@ -2,7 +2,7 @@
 var baseBet = 1;
 var basePayout = 1.69;
 var profit = 0;
-var winToReset = 2;
+var winToReset = 2; // Number win - 1
 var winStack = 0;
 var lossStack = 0;
 
@@ -29,14 +29,19 @@ engine.on('game_crash', function(data) {
 	playing = false;
  
   if(engine.lastGamePlay() == 'LOST') {
-		if
-	
-    basePayout += 1.25; 
-    console.log('[Loss -'+baseBet+' Bits] , Now Payout change to ' + basePayout + 'x');
-    profit = profit - baseBet;    
-  } else { // Win   
-    console.log('[Win +'+((baseBet * basePayout) -baseBet)+' Bits], Return Payout to Base Payout ..');
-    profit += ((baseBet*basePayout)-baseBet);
-    basePayout = 1.25;    
+		console.log('[Loss -'+baseBet+' Bits]');
+    profit = profit - baseBet;
+		baseBet *= 1.7; 
+		lossStack++;
+		winStack = 0;
+  } else { // Win
+		if(winStack >= winToReset){
+			console.log('[Win Reset +'+((baseBet * basePayout) -baseBet)+' Bits], Return to BaseBet ..');
+    	profit += ((baseBet*basePayout)-baseBet);
+    	baseBet = 1;
+		} else if(winStack == 1){
+			console.log('[Win after lose +'+((baseBet * basePayout) -baseBet)+' Bits]');
+			baseBet *=0.93
+			
   }
 });
