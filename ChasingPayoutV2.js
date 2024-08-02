@@ -13,12 +13,12 @@ var playing = false;
  
 engine.on('game_starting', function(info) {
   console.log('Total Profit = ' + profit.toFixed(2) + ' bits');
-  
-});
-
   engine.placeBet(Math.floor(baseBet)*100, Math.round(basePayout * 100));
   console.log('Bet ' + baseBet + ' Cashout at ' + basePayout + 'x');
 	playing = true;
+});
+
+ 
 engine.on('game_crash', function(data) {
   if(!playing) {
     return;
