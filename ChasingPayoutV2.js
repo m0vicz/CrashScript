@@ -1,7 +1,10 @@
 // Normal Increase Payout + Display Profit Version. Still at V1
 var baseBet = 1;
-var basePayout = 1.6;
+var basePayout = 1.69;
 var profit = 0;
+var winToReset = 2;
+var winStack = 0;
+var lossStack = 0;
 
 var startingBalance = engine.getBalance(); // in satoshi
 
@@ -12,11 +15,11 @@ console.log('Starting balance: ' + (startingBalance/100).toFixed(2) + ' bits');
 var playing = false;
  
 engine.on('game_starting', function(info) {
-  console.log('Total Profit = ' + profit.toFixed(2) + ' bits');
+	console.log('Total Profit = ' + profit.toFixed(2) + ' bits');
   engine.placeBet(Math.floor(baseBet)*100, Math.round(basePayout * 100));
   console.log('Bet ' + baseBet + ' Cashout at ' + basePayout + 'x');
-	playing = true;
-});
+  playing = true;
+});	
 
  
 engine.on('game_crash', function(data) {
@@ -26,6 +29,8 @@ engine.on('game_crash', function(data) {
 	playing = false;
  
   if(engine.lastGamePlay() == 'LOST') {
+		if
+	
     basePayout += 1.25; 
     console.log('[Loss -'+baseBet+' Bits] , Now Payout change to ' + basePayout + 'x');
     profit = profit - baseBet;    
