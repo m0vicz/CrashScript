@@ -29,7 +29,7 @@ engine.on('game_crash', function(data) {
   } 
 	playing = false;
  
-  if(engine.lastGamePlay() == 'LOST') {
+  if(engine.lastGamePlay() == 'LOST' && !firstGame) {
 		console.log('[Loss -'+baseBet+' Bits]');
     profit = profit - baseBet;
 		console.log('[Lost] Now Profit = '+ profit +' bits');
@@ -37,20 +37,20 @@ engine.on('game_crash', function(data) {
 		console.log('Next bet will be = '+ baseBet +' ..');
 		lossStack++;
 		winStack = 0;
-  } else if(engine.lastGamePlay() == 'WON'){
+  } else if(engine.lastGamePlay() == 'WON' && !firstGame){
 		winStack++;
-		if(winStack >= winToReset && !firstGame){
+		if(winStack >= winToReset){
 			console.log('[Win Reset We get +'+((baseBet * basePayout) -baseBet)+' Bits], Return to BaseBet ..');
     	profit += (baseBet * basePayout)-baseBet;
-			console.log('[Win Reset] Profit = '+profit+');
+			console.log('[Win Reset] Profit = '+profit+' bits');
     	baseBet = 1;
 			lossStack = 0;
 		}
 		if(winStack == 1 && !firstGame){
 			console.log('[Win after lose] We get +'+((baseBet * basePayout) -baseBet)+' Bits]');
 			profit += ((baseBet*basePayout)-baseBet);
-			console.log('[Win Reset] Profit = '+profit+');
-			baseBet *=0.90;
+			console.log('[Win Reset] Profit = '+profit+' bits');
+			baseBet *= 0.90;
 			console.log('Next bet will be = '+ baseBet +' ..');
 			lossStack = 0;
 		}
