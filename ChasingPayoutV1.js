@@ -1,6 +1,6 @@
 // Normal Increase Payout + Display Profit Version.
 var baseBet = 1;
-var basePayout = 1.25;
+var basePayout = 1.31;
 var profit = 0;
 
 var startingBalance = engine.getBalance(); // in satoshi
@@ -25,12 +25,12 @@ engine.on('game_crash', function(data) {
 	playing = false;
  
   if(engine.lastGamePlay() == 'LOST') {
-    basePayout += 1.25;
+    basePayout += 1.05;
     console.log('[Loss -'+baseBet+' Bits] , Now Payout change to ' + basePayout + 'x');
     profit = profit - baseBet;    
   } else { // Win   
     console.log('[Win +'+((baseBet * basePayout) -baseBet)+' Bits], Return Payout to Base Payout ..');
     profit += ((baseBet*basePayout)-baseBet);
-    basePayout = 1.25;    
+    basePayout = 1.31;    
   }
 });
