@@ -1,19 +1,19 @@
 // Normal Increase Payout + Display Profit Version. Still at V1
-var baseBet = 1;
-var basePayout = 1.60;
-var profit = 0;
-var winToReset = 2; // Number win - 1
-var winStack = 0;
-var lossStack = 0;
-var firstGame = true;
+let baseBet = 1;
+let basePayout = 1.60;
+let profit = 0;
+let winToReset = 2; // Number win - 1
+let winStack = 0;
+let lossStack = 0;
+let firstGame = true;
 
-var startingBalance = engine.getBalance(); // in satoshi
+let startingBalance = engine.getBalance(); // in satoshi
 
 console.log('================== m0viCz in  CoinsCrash ==================');
 console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (startingBalance/100).toFixed(2) + ' bits');
 
-var playing = false;
+let playing = false;
  
 engine.on('game_starting', function(info) {
 	console.log('Total Profit = ' + profit.toFixed(2) + ' bits');
