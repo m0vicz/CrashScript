@@ -29,9 +29,15 @@ engine.on('game_starting', function(info)
 		currentBet = currentbet * lossMulti;
 		console.log('Next bet will be = '+ currentBet +' ..');
 	} else if(engine.lastGamePlay() == 'WON' && !firstGame){
-		win
-  	//console.log('Bet ' + currentBet + ' Cashout at ' + basePayout + 'x');
-		engine.placeBet(Math.floor(currentBet)*100, Math.round(basePayout * 100));
+		if(numWins >= winToReset){
+			currentBet = 1;
+		}
+		if(numWins == 1){
+			currentBet = currentBet * winMulti;
+		}
+	}
+	//console.log('Bet ' + currentBet + ' Cashout at ' + basePayout + 'x');
+	engine.placeBet(Math.floor(currentBet)*100, Math.round(basePayout * 100));
 });	
 
 /////////
@@ -40,15 +46,14 @@ engine.on('game_crash', function(data) {
 		baseBet *= 1.8;
   } else if(engine.lastGamePlay() == 'WON' && !firstGame){
 		if(winStack >= winToReset){
-			console.log('[Win Reset We get +'+((baseBet * basePayout) -baseBet)+' Bits], Return to BaseBet ..');
-    	profit += (baseBet * basePayout)-baseBet;
-			console.log('[Win Reset] Profit = '+profit+' bits');
+			//console.log('[Win Reset We get +'+((currentBet * basePayout) -currentBet)+' Bits], Return to BaseBet ..');
+    	//console.log('[Win Reset] Profit = '+profit+' bits');
     	baseBet = 1;
 			lossStack = 0;
 		}
 		if(winStack == 1 && !firstGame){
-			console.log('[Win after lose] We get +'+((baseBet * basePayout) -baseBet)+' Bits]');
-			profit += ((baseBet*basePayout)-baseBet);
+			console.log('[Win after lose] We get +'+((currentBet * basePayout) -currentBet)+' Bits]');
+			//profit += ((baseBet*basePayout)-baseBet);
 			console.log('[Win Reset] Profit = '+profit+' bits');
 			baseBet *= 0.90;
 			console.log('Next bet will be = '+ baseBet +' ..');
