@@ -1,10 +1,11 @@
 // Normal Increase Payout + Display Profit Version. Still at V1
 var baseBet = 1;
-var basePayout = 1.69;
+var basePayout = 1.60;
 var profit = 0;
 var winToReset = 2; // Number win - 1
 var winStack = 0;
 var lossStack = 0;
+var firstGame = true;
 
 var startingBalance = engine.getBalance(); // in satoshi
 
@@ -31,17 +32,27 @@ engine.on('game_crash', function(data) {
   if(engine.lastGamePlay() == 'LOST') {
 		console.log('[Loss -'+baseBet+' Bits]');
     profit = profit - baseBet;
-		baseBet *= 1.7; 
+		console.log('[Lost] Now Profit = '+ profit +' bits');
+		baseBet *= 1.8;
+		console.log('Next bet will be = '+ baseBet +' ..');
 		lossStack++;
 		winStack = 0;
-  } else { // Win
-		if(winStack >= winToReset){
-			console.log('[Win Reset +'+((baseBet * basePayout) -baseBet)+' Bits], Return to BaseBet ..');
-    	profit += ((baseBet*basePayout)-baseBet);
+  } else if(engine.lastGamePlay() == 'WON'){
+		winStack++;
+		if(winStack >= winToReset && !firstGame){
+			console.log('[Win Reset We get +'+((baseBet * basePayout) -baseBet)+' Bits], Return to BaseBet ..');
+    	profit += (baseBet * basePayout)-baseBet;
+			console.log('[Win Reset] Profit = '+profit+');
     	baseBet = 1;
-		} else if(winStack == 1){
-			console.log('[Win after lose +'+((baseBet * basePayout) -baseBet)+' Bits]');
-			baseBet *=0.93
-			
-  }
+			lossStack = 0;
+		}
+		if(winStack == 1 && !firstGame){
+			console.log('[Win after lose] We get +'+((baseBet * basePayout) -baseBet)+' Bits]');
+			profit += ((baseBet*basePayout)-baseBet);
+			console.log('[Win Reset] Profit = '+profit+');
+			baseBet *=0.90;
+			console.log('Next bet will be = '+ baseBet +' ..');
+			lossStack = 0;
+		}
+	}
 });
