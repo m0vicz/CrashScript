@@ -11,7 +11,8 @@ var lossMulti = 1.8;
 var winMulti = 0.9;
 
 let startingBalance = engine.getBalance(); // in satoshi
-currentBet = Math.round(baseBet * 100);
+//currentBet = Math.round(baseBet * 100);
+currentBet = baseBet;
 
 console.log('================== m0viCz in  CoinsCrash ==================');
 console.log('My username is: ' + engine.getUsername());
@@ -26,42 +27,21 @@ engine.on('game_starting', function(info)
 	}
 	//Start Condition Win-Loss
 	if(engine.lastGamePlay() === 'LOST' && !firstGame) {
-		currentBet = currentbet * lossMulti;
+		currentBet = currentbet * 1.8;
 		console.log('Next bet will be = '+ currentBet +' ..');
 	} else if(engine.lastGamePlay() == 'WON' && !firstGame){
 		if(numWins >= winToReset){
 			currentBet = 1;
 		}
 		if(numWins == 1){
-			currentBet = currentBet * winMulti;
+			currentBet = currentBet * 0.9;
 		}
 	}
 	//console.log('Bet ' + currentBet + ' Cashout at ' + basePayout + 'x');
 	engine.placeBet(Math.floor(currentBet)*100, Math.round(basePayout * 100));
 });	
 
-/////////
-engine.on('game_crash', function(data) {
-	if(engine.lastGamePlay() === 'LOST' && !firstGame) {
-		baseBet *= 1.8;
-  } else if(engine.lastGamePlay() == 'WON' && !firstGame){
-		if(winStack >= winToReset){
-			//console.log('[Win Reset We get +'+((currentBet * basePayout) -currentBet)+' Bits], Return to BaseBet ..');
-    	//console.log('[Win Reset] Profit = '+profit+' bits');
-    	baseBet = 1;
-			lossStack = 0;
-		}
-		if(winStack == 1 && !firstGame){
-			console.log('[Win after lose] We get +'+((currentBet * basePayout) -currentBet)+' Bits]');
-			//profit += ((baseBet*basePayout)-baseBet);
-			console.log('[Win Reset] Profit = '+profit+' bits');
-			baseBet *= 0.90;
-			console.log('Next bet will be = '+ baseBet +' ..');
-			lossStack = 0;
-		}
-	}
-});
-////////
+
 
 engine.on('cashed_out', function(data) { //win
 	if (data.username === engine.getUsername())	{
