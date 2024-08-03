@@ -6,13 +6,15 @@ let winToReset = 2; // Number win - 1
 var numWins = 0;
 var numLoss = 0;
 let firstGame = true;
-let currentBet = 0;
+var currentBet = 0;
+var currentSato = 0;
 var lossMulti = 1.8;
 var winMulti = 0.9;
 
 let startingBalance = engine.getBalance(); // in satoshi
 //currentBet = Math.round(baseBet * 100);
-currentBet = baseBet;
+currentSato = Math.round(baseBet/100);
+currentBet = Math.round(currentSato * 100);
 
 console.log('================== m0viCz in  CoinsCrash ==================');
 console.log('My username is: ' + engine.getUsername());
