@@ -3,9 +3,10 @@ let baseBet = 1;
 let basePayout = 1.60;
 let profit = 0;
 let winToReset = 2; // Number win - 1
-let winStack = 0;
-let lossStack = 0;
+let numWins = 0;
+let numLoss = 0;
 let firstGame = true;
+let currentBet = 0;
 
 let startingBalance = engine.getBalance(); // in satoshi
 
@@ -14,22 +15,40 @@ console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (startingBalance/100).toFixed(2) + ' bits');
 
 let playing = false;
- 
+currentBet = Math.round(baseBet * 100);
+
+
+
 engine.on('game_starting', function(info) {
 	console.log('Total Profit = ' + profit.toFixed(2) + ' bits');
-  engine.placeBet(Math.floor(baseBet)*100, Math.round(basePayout * 100));
-  console.log('Bet ' + baseBet + ' Cashout at ' + basePayout + 'x');
+  engine.placeBet(Math.floor(currentBet)*100, Math.round(basePayout * 100));
+  console.log('Bet ' + currentBet + ' Cashout at ' + basePayout + 'x');
   playing = true;
 });	
 
- 
+engine.on('cashed_out', function(data) {
+	if (data.username === engine.getUsername())	{
+		var lastProfit = (currentBet * (data.stopped_at/100)) - currentBet;
+		console.log('[Bot] Successfully cashed out at ' + (data.stopped_at/100) + 'x (+' + (lastProfit/100).toFixed(2)  + ')');
+		
+		// Update global counters for win
+		//lastResult = 'WON';
+        numWins++;
+		currentWinStreak++;
+		currentLossStreak = 0;
+        profit += lastProfit;
+		maxWinStreak = (currentWinStreak > maxWinStreak) ? currentWinStreak : maxWinStreak;
+    }
+});
+
+	
 engine.on('game_crash', function(data) {
   if(!playing) {
     return;
   } 
 	playing = false;
  
-  if(engine.lastGamePlay() == 'LOST' && !firstGame) {
+  if(engine.lastGamePlay() === 'LOST' && !firstGame) {
 		console.log('[Loss -'+baseBet+' Bits]');
     profit = profit - baseBet;
 		console.log('[Lost] Now Profit = '+ profit +' bits');
